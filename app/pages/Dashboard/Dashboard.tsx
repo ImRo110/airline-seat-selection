@@ -1,6 +1,10 @@
 import PageLayout from "~/components/PageLayout/PageLayout";
-import { useEffect, useState } from "react";
-import SearchBox from "~/components/SearchBox/SearchBox";
+import { useEffect, useState, useMemo } from "react";
+import useCityListAPI from "~/api/useCityListAPI";
+import useGetUserCurrentLocation from "~/utils/useLocationFetch";
+import useGetNearestAirport from "~/api/useGetNearestAirport";
+import nearestAirportData from "../../components/FindFlight/nearestAirportData.json";
+import FindFlightWrapper from "~/components/FindFlight/FindFlightWrapper";
 
 export function Dashboard() {
   interface QuoteApiDataType {
@@ -10,6 +14,21 @@ export function Dashboard() {
   }
   const API_TIMEOUT = 10000;
   const [quoteData, setQuoteData] = useState<QuoteApiDataType | undefined>();
+  const [USER_LAT, USER_LONG] = useMemo(() => {
+    return [
+      localStorage.getItem("latitude"),
+      localStorage.getItem("longitude"),
+    ];
+  }, []);
+
+  console.log(USER_LAT, USER_LONG);
+
+  // const {
+  //   data: nearestAirportData,
+  //   loading: nearestAirportLoading,
+  //   fetchNearestAirport,
+  // } = useGetNearestAirport(USER_LAT, USER_LONG);
+
   const getRandomQuote = async (): Promise<QuoteApiDataType | undefined> => {
     const controller = new AbortController();
     const id = setTimeout(() => controller.abort(), API_TIMEOUT);
@@ -42,29 +61,43 @@ export function Dashboard() {
 
   useEffect(() => {
     getRandomQuote();
+    if (!USER_LAT || !USER_LONG) {
+      useGetUserCurrentLocation();
+      console.log("here");
+    } else {
+      // fetchNearestAirport();
+    }
   }, []);
 
+  console.log(nearestAirportData);
+
+  // const cityData = useCityListAPI("nagpur");
+  //
   return (
     <PageLayout>
-      <section className="text-shadow-white p-8">
+      <section className="text-shadow-white p-8 max-w-[1080px]">
         {quoteData && (
           <>
             <p
               className="text-2xl text-center font-bold"
               style={{
-                // "-webkit-background-clip": "text",
-                // "-webkit-text-fill-color": "transparent",
+                WebkitBackgroundClip: "text",
+                // WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
                 color: "red",
-                // background:
-                //   "linear-gradient(209deg,rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 10%, rgba(0, 212, 255, 1) 100%)",
+                background:
+                  "linear-gradient(209deg,rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 10%, rgba(0, 212, 255, 1) 100%)",
               }}
             >
               {quoteData?.quote}
             </p>
             <h2 className="text-center"> By - {quoteData?.author}</h2>
-            <SearchBox />
           </>
         )}
+        <p className="text-2xl text-left my-3 text-black font-bold">
+          <h3>Millions of cheap flights at your fingertips</h3>
+        </p>
+        <FindFlightWrapper nearestAirportData={nearestAirportData} />
       </section>
     </PageLayout>
   );
