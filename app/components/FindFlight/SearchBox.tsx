@@ -55,10 +55,10 @@ const SearchBox = ({
   // }, [nearestAirportData]);
   function handleAPICall() {}
 
-  console.log(nearestAirportData);
+  // console.log(nearestAirportData);
   function handleCitySearch() {
     //call thr city search api
-    console.log("hello");
+    // console.log("hello");
   }
 
   function debouncedCitySearch(citySearchFn, debounceTime: number) {
@@ -66,7 +66,7 @@ const SearchBox = ({
     function originalDebouncedCitySearch(...args) {
       clearTimeout(timer);
       timer = setTimeout(() => {
-        console.log(args);
+        // console.log(args);
         citySearchFn.apply(this, args);
       }, debounceTime);
     }

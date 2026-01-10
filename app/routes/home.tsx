@@ -1,5 +1,6 @@
 import type { Route } from "./+types/home";
 import { Dashboard } from "~/pages/Dashboard/Dashboard";
+import { AuthProvider } from "~/utils/context/AuthContext";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -12,5 +13,9 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
-  return <Dashboard />;
+  return (
+    <AuthProvider>
+      <Dashboard />
+    </AuthProvider>
+  );
 }

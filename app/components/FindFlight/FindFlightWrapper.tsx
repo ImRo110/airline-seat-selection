@@ -1,47 +1,18 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import SearchBox from "./SearchBox";
+import type { FormData, NearestAirportType } from "./findFlight.types";
 
 type JourneyType = "oneWay" | "roundTrip";
 
-interface FormData {
-  journeyType: JourneyType;
-  fromAirport: string;
-  toAirport: string;
-  fromDate: string;
-  returnDate?: string;
-}
-
-interface NearestAirportType {
-  address: {
-    cityName: string;
-    cityCode: string;
-    countryName: string;
-    countryCode: string;
-    stateCode: string;
-    regionCode: string;
-  };
-  distance: {
-    value: number;
-    unit: string;
-  };
-  geoCode: {
-    latitude: number;
-    longitude: number;
-  };
-  iataCode: string;
-  name: string;
-  subType: string;
-  type: string;
-  detailedName: string;
-  timeZoneOffset: string;
-}
-
 const FindFlightWrapper = ({
+  authToken,
   nearestAirportData,
 }: {
+  authToken: string;
   nearestAirportData: NearestAirportType[] | undefined;
 }) => {
+  console.log("authToken", authToken);
   const [journeyType, setJourneyType] = useState<JourneyType>("oneWay");
   const [formData, setFormData] = useState<FormData>();
 

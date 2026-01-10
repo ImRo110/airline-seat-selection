@@ -1,10 +1,11 @@
 import { Dashboard } from "~/pages/Dashboard/Dashboard";
+import { AuthProvider } from "~/utils/context/AuthContext";
 
 const dashboard = () => {
   return (
-    <div>
+    <AuthProvider>
       <Dashboard />
-    </div>
+    </AuthProvider>
   );
 };
 
